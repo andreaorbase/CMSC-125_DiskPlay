@@ -88,7 +88,8 @@ public class IOPanel extends javax.swing.JPanel {
         io_add = new javax.swing.JButton();
         io_minus = new javax.swing.JButton();
         io_import = new javax.swing.JButton();
-        io_start = new javax.swing.JButton();
+        io_simulate = new javax.swing.JButton();
+        io_simulate_all = new javax.swing.JButton();
         io_random = new javax.swing.JButton();
         io_save = new javax.swing.JButton();
         io_return = new javax.swing.JButton();
@@ -108,6 +109,7 @@ public class IOPanel extends javax.swing.JPanel {
         io_timer_label = new javax.swing.JLabel();
         io_select_algo_bg = new javax.swing.JLabel();
         io_timer_bg = new javax.swing.JLabel();
+        io_seek_bg = new javax.swing.JLabel();
         io_speed_bg = new javax.swing.JLabel();
         io_bg = new javax.swing.JLabel();
         scan_look = new javax.swing.JLabel();
@@ -320,7 +322,7 @@ public class IOPanel extends javax.swing.JPanel {
             }
         });
         io_backpanel.add(io_add);
-        io_add.setBounds(931, 176, 40, 40);
+        io_add.setBounds(832, 166, 40, 40);
 
         io_minus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/minus.png"))); 
         io_minus.setBorder(null);
@@ -341,7 +343,7 @@ public class IOPanel extends javax.swing.JPanel {
             }
         });
         io_backpanel.add(io_minus);
-        io_minus.setBounds(870, 176, 40, 40);
+        io_minus.setBounds(771, 166, 40, 40);
 
         io_import.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/import.png"))); 
         io_import.setBorder(null);
@@ -362,7 +364,7 @@ public class IOPanel extends javax.swing.JPanel {
             }
         });
         io_backpanel.add(io_import);
-        io_import.setBounds(430, 105, 130, 40);
+        io_import.setBounds(360, 105, 130, 40);
 
         io_left_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/left_after.png"))); 
         io_right_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/right.png"))); 
@@ -374,12 +376,13 @@ public class IOPanel extends javax.swing.JPanel {
         io_right_button.setBorderPainted(false);
         io_right_button.setContentAreaFilled(false);
 
-        io_left_button.setBounds(800, 115, 59, 20);
-        io_right_button.setBounds(800 + 59 + 8, 115, 59, 20);
+        io_left_button.setBounds(770, 115, 59, 20);
+        io_right_button.setBounds(770 + 59 + 8, 115, 59, 20);
         
-        scan_look.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); 
+        scan_look.setFont(new java.awt.Font("Poppins SemiBold", 0, 12));
+        scan_look.setForeground(new java.awt.Color(225, 225, 225)); 
         scan_look.setText("(for SCAN and LOOK)");
-        scan_look.setBounds(935, 116, 300, 20);
+        scan_look.setBounds(770 + 68 + 59 + 4, 117, 300, 20);
         add(scan_look);
 
         io_right_button.addActionListener(new java.awt.event.ActionListener() {
@@ -404,26 +407,47 @@ public class IOPanel extends javax.swing.JPanel {
         add(io_right_button);
         add(io_left_button);
 
-        io_start.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/start.png"))); 
-        io_start.setBorder(null);
-        io_start.setBorderPainted(false);
-        io_start.setContentAreaFilled(false);
-        io_start.setFocusPainted(false);
-        io_start.addMouseListener(new java.awt.event.MouseAdapter() {
+        io_simulate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate.png"))); 
+        io_simulate.setBorder(null);
+        io_simulate.setBorderPainted(false);
+        io_simulate.setContentAreaFilled(false);
+        io_simulate.setFocusPainted(false);
+        io_simulate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                io_startMouseEntered(evt);
+                io_simulateMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                io_startMouseExited(evt);
+                io_simulateMouseExited(evt);
             }
         });
-        io_start.addActionListener(new java.awt.event.ActionListener() {
+        io_simulate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                io_startActionPerformed(evt);
+                io_simulateActionPerformed(evt);
             }
         });
-        io_backpanel.add(io_start);
-        io_start.setBounds(435, 210, 180, 70);
+        io_backpanel.add(io_simulate);
+        io_simulate.setBounds(435, 210, 180, 70);
+
+        io_simulate_all.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate_all.png"))); 
+        io_simulate_all.setBorder(null);
+        io_simulate_all.setBorderPainted(false);
+        io_simulate_all.setContentAreaFilled(false);
+        io_simulate_all.setFocusPainted(false);
+        io_simulate_all.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                io_simulateAllMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                io_simulateAllMouseExited(evt);
+            }
+        });
+        io_simulate_all.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                io_simulateAllActionPerformed(evt);
+            }
+        });
+        io_backpanel.add(io_simulate_all);
+        io_simulate_all.setBounds(435 + 180 + 5, 210, 180, 70);
 
         io_random.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/random.png"))); 
         io_random.setBorder(null);
@@ -444,7 +468,7 @@ public class IOPanel extends javax.swing.JPanel {
             }
         });
         io_backpanel.add(io_random);
-        io_random.setBounds(580, 105, 140, 40);
+        io_random.setBounds(500, 105, 140, 40);
 
         io_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/save.png"))); 
         io_save.setBorder(null);
@@ -540,7 +564,7 @@ public class IOPanel extends javax.swing.JPanel {
         });
         io_algo_select.setBorder(null);
         io_backpanel.add(io_algo_select);
-        io_algo_select.setBounds(520, 180, 170, 30);
+        io_algo_select.setBounds(489, 170, 170, 30);
 
         io_queue_input.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); 
         io_queue_input.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -548,53 +572,53 @@ public class IOPanel extends javax.swing.JPanel {
         io_queue_input.setBorder(null);
         io_queue_input.setOpaque(false);
         io_backpanel.add(io_queue_input);
-        io_queue_input.setBounds(180, 180, 360, 30);
+        io_queue_input.setBounds(375, 72, 360, 30);
 
         io_position_input.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); 
-        io_position_input.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        io_position_input.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         io_position_input.setToolTipText("");
         io_position_input.setBorder(null);
         io_position_input.setOpaque(false);
         io_backpanel.add(io_position_input);
-        io_position_input.setBounds(500, 180, 90, 30);
+        io_position_input.setBounds(960, 72, 80, 30);
 
         io_dot_fcfs.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_fcfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         
         io_dot_fcfs.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_fcfs);
-        io_dot_fcfs.setBounds(40, 100, 20, 20);
+        io_dot_fcfs.setBounds(65, 65, 115, 36);
         set_dot(0);
 
         io_dot_sstf.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_sstf.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         io_dot_sstf.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_sstf);
-        io_dot_sstf.setBounds(70, 100, 20, 20);
+        io_dot_sstf.setBounds(65, 65 + 25 + 5, 115, 36);
 
         io_dot_scan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_scan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         io_dot_scan.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_scan);
-        io_dot_scan.setBounds(100, 100, 20, 20);
+        io_dot_scan.setBounds(65, 65 + 25 + 25 + 10, 115, 36);
 
         io_dot_cscan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_cscan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         io_dot_cscan.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_cscan);
-        io_dot_cscan.setBounds(130, 100, 20, 20);
+        io_dot_cscan.setBounds(65, 65 + 25 + 25 + 25 + 15, 115, 36);
 
         io_dot_look.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_look.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         io_dot_look.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_look);
-        io_dot_look.setBounds(160, 100, 20, 20);
+        io_dot_look.setBounds(65, 65 + 25 + 25 + 25 + 25 + 20, 115, 36);
 
         io_dot_clook.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_dot_clook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/dot.png"))); 
         io_dot_clook.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_dot_clook);
-        io_dot_clook.setBounds(190, 100, 20, 20);
+        io_dot_clook.setBounds(65, 65 + 25 + 25 + 25 + 25 + 25 + 25, 115, 36);
 
         io_algo_label.setFont(new java.awt.Font("Poppins ExtraBold", 0, 25)); 
         io_algo_label.setForeground(new java.awt.Color(106, 171, 240));
@@ -608,7 +632,7 @@ public class IOPanel extends javax.swing.JPanel {
         io_speed_value.setText(String.valueOf(speed) + "");
         io_speed_value.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_speed_value);
-        io_speed_value.setBounds(895, 168, 50, 60);
+        io_speed_value.setBounds(796, 158, 50, 60);
 
         io_position_bg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_position_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/position.png"))); 
@@ -623,35 +647,41 @@ public class IOPanel extends javax.swing.JPanel {
         io_speed_label.setBounds(30, 60, 920, 50);
 
         io_timer_label.setFont(new java.awt.Font("Poppins ExtraBold", 0, 25)); 
-        io_timer_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        io_timer_label.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         io_timer_label.setText("0");
-        io_timer_label.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        io_timer_label.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         io_backpanel.add(io_timer_label);
-        io_timer_label.setBounds(1075, 480, 70, 30);
+        io_timer_label.setBounds(1070, 480, 70, 30);
 
-        seek_label.setFont(new java.awt.Font("Poppins ExtraBold", 0, 20)); 
-        seek_label.setText("Seek Time: ");
-        seek_label.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        seek_label.setBounds(1075, 300, 300, 100);
+        seek_label.setFont(new java.awt.Font("Poppins ExtraBold", 0, 25)); 
+        seek_label.setText("-");
+        seek_label.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        seek_label.setBounds(1070, 348, 300, 100);
         add(seek_label);
 
         io_select_algo_bg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        io_select_algo_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/speed_bg.png"))); 
+        io_select_algo_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/algo_bg.png"))); 
         io_select_algo_bg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_select_algo_bg);
-        io_select_algo_bg.setBounds(300, 165, 400, 60);
+        io_select_algo_bg.setBounds(305, 155, 400, 60);
+
+        io_seek_bg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        io_seek_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/seek-time.png"))); 
+        io_seek_bg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        io_backpanel.add(io_seek_bg);
+        io_seek_bg.setBounds(1035, 300, 150, 150);
 
         io_timer_bg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_timer_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/timer.png"))); 
         io_timer_bg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_timer_bg);
-        io_timer_bg.setBounds(1035, 412, 150, 70);
+        io_timer_bg.setBounds(1035, 400, 150, 150);
 
         io_speed_bg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         io_speed_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/speed_bg.png"))); 
         io_speed_bg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         io_backpanel.add(io_speed_bg);
-        io_speed_bg.setBounds(650, 165, 400, 60);
+        io_speed_bg.setBounds(580, 155, 400, 60);
 
         io_bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/backgrounds/background_IO.png"))); 
         io_bg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -897,15 +927,23 @@ public class IOPanel extends javax.swing.JPanel {
         io_position_input.setText(String.valueOf(random_array[rand.nextInt(random_array.length)]));
     }                                         
 
-    public void io_startMouseEntered(java.awt.event.MouseEvent evt) {                                      
-        io_start.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/start_hover.png")));
+    public void io_simulateMouseEntered(java.awt.event.MouseEvent evt) {                                      
+        io_simulate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate_hover.png")));
     }                                     
 
-    public void io_startMouseExited(java.awt.event.MouseEvent evt) {                                     
-        io_start.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/start.png")));
-    }                                    
+    public void io_simulateMouseExited(java.awt.event.MouseEvent evt) {                                     
+        io_simulate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate.png")));
+    }
 
-    public void io_startActionPerformed(java.awt.event.ActionEvent evt) {
+    public void io_simulateAllMouseEntered(java.awt.event.MouseEvent evt) {                                      
+        io_simulate_all.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate_all_hover.png")));
+    }
+
+    public void io_simulateAllMouseExited(java.awt.event.MouseEvent evt) {                                     
+        io_simulate_all.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/simulate_all.png")));
+    }
+                                                                     
+    public void io_simulateActionPerformed(java.awt.event.ActionEvent evt) {
         Music.sfx();
         io_output_panel_scroll.getVerticalScrollBar().setValue(-10);     
         count = 0;
@@ -1043,7 +1081,7 @@ public class IOPanel extends javax.swing.JPanel {
                         size = size + 100;
                 
                     numberline.setPreferredSize(new Dimension(920, size));
-                    seek_label.setText("Seek Time: " + DiskAlgos.getTotal_distance());
+                    seek_label.setText("" + DiskAlgos.getTotal_distance());
                     
                     JLabel algo = new JLabel("Algorithm: " + io_algo_select.getSelectedItem().toString(), null, SwingConstants.LEFT);
                     algo.setBackground(new java.awt.Color(250, 236, 182));
@@ -1062,7 +1100,7 @@ public class IOPanel extends javax.swing.JPanel {
 
                     JLabel seek_time = new JLabel(seek_label.getText(), null, SwingConstants.LEFT);
                     seek_time.setBackground(new java.awt.Color(250, 236, 182));
-                    seek_time.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+                    seek_time.setFont(new java.awt.Font("Poppins SemiBold", 0, 25));
                     seek_time.setAlignmentX(Component.LEFT_ALIGNMENT);
                     
                     // numberline.setBounds(getX(), getY(), 200, 200);
@@ -1103,7 +1141,15 @@ public class IOPanel extends javax.swing.JPanel {
             timer.stop();
             return;
         }
-    }                                        
+    }
+
+
+    // INSERT SIMULATE ALL IN HERE
+    public void io_simulateAllActionPerformed(java.awt.event.ActionEvent evt) {
+    
+    }
+
+
 
     public void io_save_pngMouseEntered(java.awt.event.MouseEvent evt) {                                         
         io_save_png.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/png_hover.png")));
@@ -1337,14 +1383,16 @@ public class IOPanel extends javax.swing.JPanel {
     public javax.swing.JButton io_save_png;
     public javax.swing.JLabel io_speed_bg;
     public javax.swing.JLabel io_speed_label;
-    public javax.swing.JButton io_start;
+    public javax.swing.JButton io_simulate;
+    public javax.swing.JButton io_simulate_all;
     public javax.swing.JLabel io_select_algo_bg;
+    public javax.swing.JLabel io_seek_bg;
     public javax.swing.JLabel io_timer_bg;
     public javax.swing.JLabel io_timer_label;
     public javax.swing.JButton minimize;             
     public ArrayList<Integer> import_ArrayList;
     public NumberLineDrawing numberline;
-    public javax.swing.JButton io_left_button;
+    public javax.swing.JButton io_left_button; 
     public javax.swing.JButton io_right_button;
     public javax.swing.JLabel seek_label;
     public javax.swing.JLabel scan_look;
