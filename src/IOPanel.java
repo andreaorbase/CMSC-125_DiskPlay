@@ -1530,12 +1530,8 @@ public class IOPanel extends javax.swing.JPanel {
                     if (currentAlgoIndex >= algorithms.length) {
                         timer.stop();
                         
-                        // Add a message that all simulations are complete
-                        JLabel completeLabel = new JLabel("All simulations complete!", null, SwingConstants.LEFT);
-                        completeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 18));
-                        completeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        completeLabel.setForeground(new java.awt.Color(0, 128, 0));
-                        animationPanel.add(completeLabel);
+                        // Remove the info panel when all animations are complete
+                        animationPanel.remove(infoPanel);
                         animationPanel.revalidate();
                         animationPanel.repaint();
                     }
