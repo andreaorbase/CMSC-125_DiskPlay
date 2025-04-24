@@ -29,9 +29,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.JTableHeader;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -1149,6 +1151,7 @@ public class IOPanel extends javax.swing.JPanel {
     public void io_simulateAllActionPerformed(java.awt.event.ActionEvent evt) {
     Music.sfx();
     io_output_panel_scroll.getVerticalScrollBar().setValue(-10);     
+    count = 0;
     io_output_panel.removeAll();        
     io_save.setEnabled(true);
     
@@ -1196,10 +1199,24 @@ public class IOPanel extends javax.swing.JPanel {
         allAlgorithmsPanel.add(headPositionLabel);
         allAlgorithmsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         
+        // Set the content of the output panel
+        io_output_panel.removeAll();
+        io_output_panel.add(allAlgorithmsPanel);
+        io_output_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        io_output_panel.setLayout(new BoxLayout(io_output_panel, BoxLayout.Y_AXIS));
+        io_output_panel.setBackground(new java.awt.Color(250, 236, 182));
+        io_output_panel_scroll.setViewportView(io_output_panel);
+        
         // Array to store all algorithm names
         String[] algorithms = {"FCFS", "SSTF", "SCAN", "C-SCAN", "LOOK", "C-LOOK"};
         
-        // Process each algorithm
+        // Store results for all algorithms
+        ArrayList<int[]> allResults = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> allSequences = new ArrayList<>();
+        ArrayList<Integer> seekTimes = new ArrayList<>();
+        ArrayList<Double> totalTimes = new ArrayList<>();
+        
+        // Calculate results for all algorithms first
         for(int algoIndex = 0; algoIndex < algorithms.length; algoIndex++) {
             ArrayList<Integer> sequence = new ArrayList<>();
             ArrayList<Integer> temp_results = new ArrayList<>();
@@ -1212,6 +1229,8 @@ public class IOPanel extends javax.swing.JPanel {
             for(int i = 0; i < main_queue.length; i++){
                 sequence.add(main_queue[i]);
             }
+            
+            allSequences.add(sequence);
             
             int[] results;
             
@@ -1265,65 +1284,269 @@ public class IOPanel extends javax.swing.JPanel {
                     results = new int[0];
             }
             
-            // Calculate seek time for this algorithm
+            allResults.add(results);
+            
+            // Calculate seek time
             int seekTime = 0;
             for(int i = 1; i < results.length; i++) {
                 seekTime += Math.abs(results[i] - results[i-1]);
             }
+            seekTimes.add(seekTime);
             
-            // Create algorithm panel
-            JPanel algoPanel = new JPanel();
-            algoPanel.setLayout(new BoxLayout(algoPanel, BoxLayout.Y_AXIS));
-            algoPanel.setBackground(new java.awt.Color(250, 236, 182));
-            algoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            
-            // Algorithm name
-            JLabel algoName = new JLabel("Algorithm: " + algorithms[algoIndex], null, SwingConstants.LEFT);
-            algoName.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
-            algoName.setAlignmentX(Component.LEFT_ALIGNMENT);
-            
-            // Seek time
-            JLabel seekTimeLabel = new JLabel("Total Seek Time: " + seekTime, null, SwingConstants.LEFT);
-            seekTimeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 25));
-            seekTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            
-            // Create number line visualization
-            int start = 0;
-            int end = 199;
-            
-            NumberLineDrawing numberline = new NumberLineDrawing(start, end, sequence, results, head, speed);
-            numberline.setAutoscrolls(true);
-            
-            int size = main_queue.length * 60 + 40;
-            if (algorithms[algoIndex].equals("C-SCAN")) {
-                size = size + 100;
-            }
-            
-            numberline.setPreferredSize(new Dimension(920, size));
-            
-            // Add components to algorithm panel
-            algoPanel.add(algoName);
-            algoPanel.add(seekTimeLabel);
-            algoPanel.add(numberline);
-            
-            // Add separator between algorithms
-            algoPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-            JSeparator separator = new JSeparator();
-            separator.setMaximumSize(new Dimension(920, 2));
-            algoPanel.add(separator);
-            algoPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-            
-            // Add this algorithm's panel to the main panel
-            allAlgorithmsPanel.add(algoPanel);
+            // Calculate total time
+            double seekTimeMs = seekTime * 0.1; // 0.1ms per track movement
+            double accessTime = results.length * 5.0; // 5ms per access
+            double totalTime = seekTimeMs + accessTime;
+            totalTimes.add(totalTime);
         }
         
-        // Set the content of the output panel
-        io_output_panel.removeAll();
-        io_output_panel.add(allAlgorithmsPanel);
-        io_output_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        io_output_panel.setLayout(new BoxLayout(io_output_panel, BoxLayout.Y_AXIS));
-        io_output_panel.setBackground(new java.awt.Color(250, 236, 182));
-        io_output_panel_scroll.setViewportView(io_output_panel);
+        // Create comparison table panel
+        JPanel comparisonPanel = new JPanel();
+        comparisonPanel.setLayout(new BoxLayout(comparisonPanel, BoxLayout.Y_AXIS));
+        comparisonPanel.setBackground(new java.awt.Color(250, 236, 182));
+        comparisonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel comparisonTitle = new JLabel("Algorithm Comparison", null, SwingConstants.LEFT);
+        comparisonTitle.setFont(new java.awt.Font("Poppins SemiBold", 0, 20));
+        comparisonTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        comparisonPanel.add(comparisonTitle);
+        
+        String[] columnNames = {"Algorithm", "Seek Time", "Total Time"};
+        Object[][] data = new Object[6][3]; // 6 algorithms, 3 columns
+        
+        for(int i = 0; i < algorithms.length; i++) {
+            data[i][0] = algorithms[i];
+            data[i][1] = seekTimes.get(i) + " tracks";
+            data[i][2] = String.format("%.2f ms", totalTimes.get(i));
+        }
+        
+        // Create comparison table
+        JTable comparisonTable = new JTable(data, columnNames);
+        comparisonTable.setPreferredScrollableViewportSize(new Dimension(500, 100));
+        comparisonTable.setFillsViewportHeight(true);
+        comparisonTable.setEnabled(false);
+        comparisonTable.setRowHeight(25);
+        comparisonTable.setFont(new java.awt.Font("Poppins", 0, 14));
+        
+        JTableHeader header = comparisonTable.getTableHeader();
+        header.setFont(new java.awt.Font("Poppins SemiBold", 0, 14));
+        
+        JScrollPane tableScrollPane = new JScrollPane(comparisonTable);
+        tableScrollPane.setMaximumSize(new Dimension(700, 150));
+        tableScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        comparisonPanel.add(tableScrollPane);
+        comparisonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        
+        allAlgorithmsPanel.add(comparisonPanel);
+        JSeparator mainSeparator = new JSeparator();
+        mainSeparator.setMaximumSize(new Dimension(920, 2));
+        allAlgorithmsPanel.add(mainSeparator);
+        allAlgorithmsPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        
+        // Create animation panel
+        JPanel animationPanel = new JPanel();
+        animationPanel.setLayout(new BoxLayout(animationPanel, BoxLayout.Y_AXIS));
+        animationPanel.setBackground(new java.awt.Color(250, 236, 182));
+        animationPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        allAlgorithmsPanel.add(animationPanel);
+        
+        // Create a panel to store all algorithm visualizations
+        JPanel allAlgorithmVisualizations = new JPanel();
+        allAlgorithmVisualizations.setLayout(new BoxLayout(allAlgorithmVisualizations, BoxLayout.Y_AXIS));
+        allAlgorithmVisualizations.setBackground(new java.awt.Color(250, 236, 182));
+        allAlgorithmVisualizations.setAlignmentX(Component.LEFT_ALIGNMENT);
+        animationPanel.add(allAlgorithmVisualizations);
+        
+        // Create info panel for current algorithm
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(new java.awt.Color(250, 236, 182));
+        infoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        animationPanel.add(infoPanel);
+        
+        JLabel currentAlgoLabel = new JLabel("Current Algorithm: ", null, SwingConstants.LEFT);
+        currentAlgoLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 18));
+        currentAlgoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel seekTimeLabel = new JLabel("Total Seek Time: ", null, SwingConstants.LEFT);
+        seekTimeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+        seekTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel totalTimeLabel = new JLabel("Total Time: ", null, SwingConstants.LEFT);
+        totalTimeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+        totalTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel progressLabel = new JLabel("Step: ", null, SwingConstants.LEFT);
+        progressLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 14));
+        progressLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        infoPanel.add(currentAlgoLabel);
+        infoPanel.add(seekTimeLabel);
+        infoPanel.add(totalTimeLabel);
+        infoPanel.add(progressLabel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        
+        // Create an array to store all algorithm visualization panels
+        final JPanel[] algoVisualizationPanels = new JPanel[algorithms.length];
+        
+        // Initialize all visualization panels
+        for(int i = 0; i < algorithms.length; i++) {
+            // Create algorithm header panel
+            JPanel algoHeaderPanel = new JPanel();
+            algoHeaderPanel.setLayout(new BoxLayout(algoHeaderPanel, BoxLayout.Y_AXIS));
+            algoHeaderPanel.setBackground(new java.awt.Color(250, 236, 182));
+            algoHeaderPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            JLabel algoTitleLabel = new JLabel(algorithms[i], null, SwingConstants.LEFT);
+            algoTitleLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+            algoTitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            JLabel algoSeekTimeLabel = new JLabel("Seek Time: " + seekTimes.get(i) + " tracks", null, SwingConstants.LEFT);
+            algoSeekTimeLabel.setFont(new java.awt.Font("Poppins", 0, 14));
+            algoSeekTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            JLabel algoTotalTimeLabel = new JLabel("Total Time: " + String.format("%.2f ms", totalTimes.get(i)), null, SwingConstants.LEFT);
+            algoTotalTimeLabel.setFont(new java.awt.Font("Poppins", 0, 14));
+            algoTotalTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            algoHeaderPanel.add(algoTitleLabel);
+            algoHeaderPanel.add(algoSeekTimeLabel);
+            algoHeaderPanel.add(algoTotalTimeLabel);
+            
+            // Create visualization container panel
+            JPanel algoVisPanel = new JPanel();
+            algoVisPanel.setLayout(new BoxLayout(algoVisPanel, BoxLayout.Y_AXIS));
+            algoVisPanel.setBackground(new java.awt.Color(250, 236, 182));
+            algoVisPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            algoVisPanel.add(algoHeaderPanel);
+            algoVisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            
+            // Add placeholder for numberline
+            JPanel numberlinePanel = new JPanel();
+            numberlinePanel.setLayout(new BoxLayout(numberlinePanel, BoxLayout.Y_AXIS));
+            numberlinePanel.setBackground(new java.awt.Color(250, 236, 182));
+            numberlinePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            algoVisPanel.add(numberlinePanel);
+            
+            // Add separator
+            JSeparator separator = new JSeparator();
+            separator.setMaximumSize(new Dimension(920, 2));
+            
+            // Store the panel for later use
+            algoVisualizationPanels[i] = algoVisPanel;
+            
+            // Only add the first algorithm initially - others will be added as they complete
+            if (i == 0) {
+                allAlgorithmVisualizations.add(algoVisPanel);
+                allAlgorithmVisualizations.add(separator);
+                allAlgorithmVisualizations.add(Box.createRigidArea(new Dimension(0, 20)));
+            }
+        }
+        
+        // Set up animation timer
+        count = 0;
+        
+        scroll_value = io_output_panel_scroll.getVerticalScrollBar().getValue();
+        
+        timer = new Timer((int) (500/speed), new ActionListener() {
+            int stepCount = 0;
+            int currentAlgoIndex = 0;
+            
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                int[] currentResults = allResults.get(currentAlgoIndex);
+                ArrayList<Integer> currentSequence = allSequences.get(currentAlgoIndex);
+                
+                // Update info panel
+                currentAlgoLabel.setText("Current Algorithm: " + algorithms[currentAlgoIndex]);
+                progressLabel.setText("Step: " + (stepCount + 1) + "/" + currentResults.length);
+                
+                // Calculate current seek time
+                int currentSeekTime = 0;
+                for(int i = 1; i <= Math.min(stepCount + 1, currentResults.length - 1); i++) {
+                    currentSeekTime += Math.abs(currentResults[i] - currentResults[i-1]);
+                }
+                seekTimeLabel.setText("Total Seek Time: " + currentSeekTime + " tracks");
+                
+                // Calculate current total time
+                double currentSeekTimeMs = currentSeekTime * 0.1;
+                double currentAccessTime = (stepCount + 1) * 5.0;
+                double currentTotalTime = currentSeekTimeMs + currentAccessTime;
+                totalTimeLabel.setText("Total Time: " + String.format("%.2f ms", currentTotalTime));
+                
+                // Create current step array
+                int[] displayResults = Arrays.copyOfRange(currentResults, 0, stepCount + 1);
+                
+                // Update number line
+                int start = 0;
+                int end = 199;
+                
+                NumberLineDrawing numberline = new NumberLineDrawing(start, end, currentSequence, displayResults, head, speed);
+                numberline.setAutoscrolls(true);
+                
+                int size = main_queue.length * 60 + 40;
+                if (algorithms[currentAlgoIndex].equals("C-SCAN")) {
+                    size = size + 100;
+                }
+                
+                numberline.setPreferredSize(new Dimension(920, size));
+                
+                // Get the current algorithm's visualization panel and update its numberline
+                JPanel algoVisPanel = algoVisualizationPanels[currentAlgoIndex];
+                JPanel numberlinePanel = (JPanel) algoVisPanel.getComponent(2); // Index 2 is the numberline panel
+                
+                numberlinePanel.removeAll();
+                numberlinePanel.add(numberline);
+                numberlinePanel.revalidate();
+                numberlinePanel.repaint();
+                
+                // Set scroll position
+                scroll_value = io_output_panel_scroll.getVerticalScrollBar().getValue();
+                io_output_panel_scroll.getVerticalScrollBar().setValue(scroll_value);
+                
+                // Increment step counter
+                stepCount++;
+                
+                // Check if current algorithm animation is complete
+                if (stepCount >= currentResults.length) {
+                    stepCount = 0;
+                    currentAlgoIndex++;
+                    
+                    // Add the next algorithm panel if available
+                    if (currentAlgoIndex < algorithms.length) {
+                        allAlgorithmVisualizations.add(algoVisualizationPanels[currentAlgoIndex]);
+                        JSeparator separator = new JSeparator();
+                        separator.setMaximumSize(new Dimension(920, 2));
+                        allAlgorithmVisualizations.add(separator);
+                        allAlgorithmVisualizations.add(Box.createRigidArea(new Dimension(0, 20)));
+                        allAlgorithmVisualizations.revalidate();
+                        allAlgorithmVisualizations.repaint();
+                    }
+                    
+                    // Check if all algorithms are done
+                    if (currentAlgoIndex >= algorithms.length) {
+                        timer.stop();
+                        
+                        // Add a message that all simulations are complete
+                        JLabel completeLabel = new JLabel("All simulations complete!", null, SwingConstants.LEFT);
+                        completeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 18));
+                        completeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        completeLabel.setForeground(new java.awt.Color(0, 128, 0));
+                        animationPanel.add(completeLabel);
+                        animationPanel.revalidate();
+                        animationPanel.repaint();
+                    }
+                }
+            }
+        });
+        
+        // Start the animation
+        if (!timer.isRunning()) {
+            timer.start();
+        }
         
         // Configure scrolling
         io_output_panel_scroll.getVerticalScrollBar().setValue(0);
@@ -1332,6 +1555,7 @@ public class IOPanel extends javax.swing.JPanel {
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Invalid Input: " + e, 
                 "Input Error", JOptionPane.ERROR_MESSAGE);
+        timer.stop();
         return;
     }
 }
