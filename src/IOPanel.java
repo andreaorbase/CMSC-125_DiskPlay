@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -1146,8 +1147,194 @@ public class IOPanel extends javax.swing.JPanel {
 
     // INSERT SIMULATE ALL IN HERE
     public void io_simulateAllActionPerformed(java.awt.event.ActionEvent evt) {
+    Music.sfx();
+    io_output_panel_scroll.getVerticalScrollBar().setValue(-10);     
+    io_output_panel.removeAll();        
+    io_save.setEnabled(true);
     
+    temp_array = new ArrayList<Integer>();
+    try(Scanner read = new Scanner(io_queue_input.getText())) {
+        while(read.hasNext()){
+            temp_array.add(read.nextInt());
+        }
+
+        if(temp_array.size() > 40){
+            JOptionPane.showMessageDialog(null, "Invalid Input: Queue size exceeds 40", 
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        main_queue = new int[temp_array.size()];
+        
+        for(int i = 0; i < temp_array.size(); i++){
+            main_queue[i] = temp_array.get(i);
+        }
+        
+        try {
+            head = Integer.valueOf(io_position_input.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid Head Position", 
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Create a panel to hold all algorithm results
+        JPanel allAlgorithmsPanel = new JPanel();
+        allAlgorithmsPanel.setLayout(new BoxLayout(allAlgorithmsPanel, BoxLayout.Y_AXIS));
+        allAlgorithmsPanel.setBackground(new java.awt.Color(250, 236, 182));
+        
+        // Add header information
+        JLabel queueLabel = new JLabel("Queue: " + io_queue_input.getText(), null, SwingConstants.LEFT);
+        queueLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+        queueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel headPositionLabel = new JLabel("Head Starting Position: " + io_position_input.getText(), null, SwingConstants.LEFT);
+        headPositionLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+        headPositionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        allAlgorithmsPanel.add(queueLabel);
+        allAlgorithmsPanel.add(headPositionLabel);
+        allAlgorithmsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        
+        // Array to store all algorithm names
+        String[] algorithms = {"FCFS", "SSTF", "SCAN", "C-SCAN", "LOOK", "C-LOOK"};
+        
+        // Process each algorithm
+        for(int algoIndex = 0; algoIndex < algorithms.length; algoIndex++) {
+            ArrayList<Integer> sequence = new ArrayList<>();
+            ArrayList<Integer> temp_results = new ArrayList<>();
+            
+            // Add head to sequence
+            sequence.add(head);
+            temp_results.add(head);
+            
+            // Add queue items to sequence
+            for(int i = 0; i < main_queue.length; i++){
+                sequence.add(main_queue[i]);
+            }
+            
+            int[] results;
+            
+            // Process based on algorithm type
+            switch(algoIndex) {
+                case 0: // FCFS
+                    results = DiskAlgos.FCFS(main_queue, head);
+                    for(int i = 0; i < results.length; i++){
+                        temp_results.add(results[i]);
+                    }
+                    results = temp_results.stream().mapToInt(i -> i).toArray();
+                    break;
+                    
+                case 1: // SSTF
+                    results = DiskAlgos.SSTF(main_queue, head);
+                    break;
+                    
+                case 2: // SCAN
+                    results = DiskAlgos.SCAN(main_queue, head, direction);
+                    for(int i = 0; i < results.length; i++){
+                        temp_results.add(results[i]);
+                    }
+                    results = temp_results.stream().mapToInt(i -> i).toArray();
+                    break;
+                    
+                case 3: // C-SCAN
+                    results = DiskAlgos.CSCAN(main_queue, head);
+                    for(int i = 0; i < results.length; i++){
+                        temp_results.add(results[i]);
+                    }
+                    results = temp_results.stream().mapToInt(i -> i).toArray();
+                    break;
+                    
+                case 4: // LOOK
+                    results = DiskAlgos.LOOK(main_queue, head, direction);
+                    for(int i = 0; i < results.length; i++){
+                        temp_results.add(results[i]);
+                    }
+                    results = temp_results.stream().mapToInt(i -> i).toArray();
+                    break;
+                    
+                case 5: // C-LOOK
+                    results = DiskAlgos.CLOOK(main_queue, head);
+                    for(int i = 0; i < results.length; i++){
+                        temp_results.add(results[i]);
+                    }
+                    results = temp_results.stream().mapToInt(i -> i).toArray();
+                    break;
+                    
+                default:
+                    results = new int[0];
+            }
+            
+            // Calculate seek time for this algorithm
+            int seekTime = 0;
+            for(int i = 1; i < results.length; i++) {
+                seekTime += Math.abs(results[i] - results[i-1]);
+            }
+            
+            // Create algorithm panel
+            JPanel algoPanel = new JPanel();
+            algoPanel.setLayout(new BoxLayout(algoPanel, BoxLayout.Y_AXIS));
+            algoPanel.setBackground(new java.awt.Color(250, 236, 182));
+            algoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            // Algorithm name
+            JLabel algoName = new JLabel("Algorithm: " + algorithms[algoIndex], null, SwingConstants.LEFT);
+            algoName.setFont(new java.awt.Font("Poppins SemiBold", 0, 16));
+            algoName.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            // Seek time
+            JLabel seekTimeLabel = new JLabel("Total Seek Time: " + seekTime, null, SwingConstants.LEFT);
+            seekTimeLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 25));
+            seekTimeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            // Create number line visualization
+            int start = 0;
+            int end = 199;
+            
+            NumberLineDrawing numberline = new NumberLineDrawing(start, end, sequence, results, head, speed);
+            numberline.setAutoscrolls(true);
+            
+            int size = main_queue.length * 60 + 40;
+            if (algorithms[algoIndex].equals("C-SCAN")) {
+                size = size + 100;
+            }
+            
+            numberline.setPreferredSize(new Dimension(920, size));
+            
+            // Add components to algorithm panel
+            algoPanel.add(algoName);
+            algoPanel.add(seekTimeLabel);
+            algoPanel.add(numberline);
+            
+            // Add separator between algorithms
+            algoPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+            JSeparator separator = new JSeparator();
+            separator.setMaximumSize(new Dimension(920, 2));
+            algoPanel.add(separator);
+            algoPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+            
+            // Add this algorithm's panel to the main panel
+            allAlgorithmsPanel.add(algoPanel);
+        }
+        
+        // Set the content of the output panel
+        io_output_panel.removeAll();
+        io_output_panel.add(allAlgorithmsPanel);
+        io_output_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        io_output_panel.setLayout(new BoxLayout(io_output_panel, BoxLayout.Y_AXIS));
+        io_output_panel.setBackground(new java.awt.Color(250, 236, 182));
+        io_output_panel_scroll.setViewportView(io_output_panel);
+        
+        // Configure scrolling
+        io_output_panel_scroll.getVerticalScrollBar().setValue(0);
+        io_output_panel_scroll.getVerticalScrollBar().setUnitIncrement(30);
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Invalid Input: " + e, 
+                "Input Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+}
 
 
 
