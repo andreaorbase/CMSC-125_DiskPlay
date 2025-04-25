@@ -59,7 +59,6 @@ public class IOPanel extends javax.swing.JPanel {
     int head;
     private ArrayList<Integer> temp_array;
 
-
     public void reset(){
         // speed = 1;
         // selected = 0;
@@ -390,7 +389,6 @@ public class IOPanel extends javax.swing.JPanel {
 
         io_right_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // io_startActionPerformed(evt);
                 direction = "right";
                 io_right_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/right_after.png"))); 
                 io_left_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/left.png"))); 
@@ -400,8 +398,6 @@ public class IOPanel extends javax.swing.JPanel {
         io_left_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 direction = "left";
-                // io_startActionPerformed(evt);
-                // direction = "right";
                 io_left_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/left_after.png"))); 
                 io_right_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/io_panel/right.png"))); 
             }
@@ -1366,7 +1362,7 @@ public class IOPanel extends javax.swing.JPanel {
         animationPanel.add(infoPanel);
         
         JLabel currentAlgoLabel = new JLabel("Current Algorithm: ", null, SwingConstants.LEFT);
-        currentAlgoLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 18));
+        currentAlgoLabel.setFont(new java.awt.Font("Poppins SemiBold", 0, 25));
         currentAlgoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JLabel seekTimeLabel = new JLabel("Total Seek Time: ", null, SwingConstants.LEFT);
@@ -1387,10 +1383,8 @@ public class IOPanel extends javax.swing.JPanel {
         infoPanel.add(progressLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
-        // Create an array to store all algorithm visualization panels
         final JPanel[] algoVisualizationPanels = new JPanel[algorithms.length];
         
-        // Initialize all visualization panels
         for(int i = 0; i < algorithms.length; i++) {
             // Create algorithm header panel
             JPanel algoHeaderPanel = new JPanel();
@@ -1460,27 +1454,22 @@ public class IOPanel extends javax.swing.JPanel {
                 int[] currentResults = allResults.get(currentAlgoIndex);
                 ArrayList<Integer> currentSequence = allSequences.get(currentAlgoIndex);
                 
-                // Update info panel
                 currentAlgoLabel.setText("Current Algorithm: " + algorithms[currentAlgoIndex]);
                 progressLabel.setText("Step: " + (stepCount + 1) + "/" + currentResults.length);
                 
-                // Calculate current seek time
                 int currentSeekTime = 0;
                 for(int i = 1; i <= Math.min(stepCount + 1, currentResults.length - 1); i++) {
                     currentSeekTime += Math.abs(currentResults[i] - currentResults[i-1]);
                 }
                 seekTimeLabel.setText("Total Seek Time: " + currentSeekTime + " tracks");
                 
-                // Calculate current total time
                 double currentSeekTimeMs = currentSeekTime * 0.1;
                 double currentAccessTime = (stepCount + 1) * 5.0;
                 double currentTotalTime = currentSeekTimeMs + currentAccessTime;
                 totalTimeLabel.setText("Total Time: " + String.format("%.2f ms", currentTotalTime));
                 
-                // Create current step array
                 int[] displayResults = Arrays.copyOfRange(currentResults, 0, stepCount + 1);
                 
-                // Update number line
                 int start = 0;
                 int end = 199;
                 
@@ -1494,28 +1483,23 @@ public class IOPanel extends javax.swing.JPanel {
                 
                 numberline.setPreferredSize(new Dimension(920, size));
                 
-                // Get the current algorithm's visualization panel and update its numberline
                 JPanel algoVisPanel = algoVisualizationPanels[currentAlgoIndex];
-                JPanel numberlinePanel = (JPanel) algoVisPanel.getComponent(2); // Index 2 is the numberline panel
+                JPanel numberlinePanel = (JPanel) algoVisPanel.getComponent(2); 
                 
                 numberlinePanel.removeAll();
                 numberlinePanel.add(numberline);
                 numberlinePanel.revalidate();
                 numberlinePanel.repaint();
                 
-                // Set scroll position
                 scroll_value = io_output_panel_scroll.getVerticalScrollBar().getValue();
                 io_output_panel_scroll.getVerticalScrollBar().setValue(scroll_value);
                 
-                // Increment step counter
                 stepCount++;
                 
-                // Check if current algorithm animation is complete
                 if (stepCount >= currentResults.length) {
                     stepCount = 0;
                     currentAlgoIndex++;
                     
-                    // Add the next algorithm panel if available
                     if (currentAlgoIndex < algorithms.length) {
                         allAlgorithmVisualizations.add(algoVisualizationPanels[currentAlgoIndex]);
                         JSeparator separator = new JSeparator();
@@ -1526,11 +1510,9 @@ public class IOPanel extends javax.swing.JPanel {
                         allAlgorithmVisualizations.repaint();
                     }
                     
-                    // Check if all algorithms are done
                     if (currentAlgoIndex >= algorithms.length) {
                         timer.stop();
                         
-                        // Remove the info panel when all animations are complete
                         animationPanel.remove(infoPanel);
                         animationPanel.revalidate();
                         animationPanel.repaint();
@@ -1539,12 +1521,10 @@ public class IOPanel extends javax.swing.JPanel {
             }
         });
         
-        // Start the animation
         if (!timer.isRunning()) {
             timer.start();
         }
         
-        // Configure scrolling
         io_output_panel_scroll.getVerticalScrollBar().setValue(0);
         io_output_panel_scroll.getVerticalScrollBar().setUnitIncrement(30);
         
