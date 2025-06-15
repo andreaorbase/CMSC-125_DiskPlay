@@ -38,7 +38,7 @@
   - Save simulation result as image or PDF
   - File name format: `mmddyy_hhmmss_DS`
 
-## 📥 Input Modes
+## Input Modes
 
 ### 1. Random Input
 
