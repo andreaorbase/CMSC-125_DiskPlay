@@ -1,5 +1,17 @@
 # DiskPlay: Disk Scheduling Simulator
 
+## Table of Contents
+- [Overview](#overview)
+- [Algorithms](#algorithms)
+- [Features](#features)
+- [Files and Directories](#files-and-directories)
+- [Getting Started](#getting-started)
+  - [Prerequites](#prerequisites)
+  - [User System Flow](#user-system-flow)
+  - [Preview](#preview)
+- [Contribution](#contribution)
+  - [License](#license)
+
 **DiskPlay** is a desktop application for simulating various disk scheduling algorithms. It offers interactive input methods, animated visualizations, and exportable outputs for educational and analytical use.
 
 ---
