@@ -29,16 +29,14 @@
   - **Manual Input** – enter request queue, head position, and direction via GUI.
   - **Text File Input** – load input from a structured `.txt` file.
 
-- 📊 **Simulation Visualization**:
+- **Simulation Visualization**:
   - Cylinders displayed as labeled dots (0–199)
   - Dynamic connection between head movements
   - Adjustable animation speed using a timer
 
-- 💾 **Export Options**:
+- **Export Options**:
   - Save simulation result as image or PDF
   - File name format: `mmddyy_hhmmss_DS`
-
----
 
 ## 📥 Input Modes
 
@@ -63,10 +61,8 @@ You can provide the input through a `.txt` file with the following format:
 
 <number_of_requests> <comma_separated_requests> <initial_head_position> <direction> 
 
-
-✅ **Example File Content**:
+**Example File Content**:
 7 82,170,43,140,24,16,190 50 right
-
 
 **Explanation**:
 - `7` – number of requests
@@ -74,19 +70,14 @@ You can provide the input through a `.txt` file with the following format:
 - `50` – initial R/W head position
 - `right` – direction of head movement (`left` or `right`) for applicable algorithms
 
-
----
-
-## 🖥 Output
+## Output
 
 Each simulation displays:
 - A graphical path showing R/W head movement
 - Dots labeled with cylinder values
 - **Total Seek Time** calculated and shown at the end
 
----
-
-## 💾 Exporting Results
+## Exporting Results
 
 After simulation:
 - You can save results as:
@@ -95,17 +86,13 @@ After simulation:
   - `.jpg`
 - Exported file uses the format: `mmddyy_hhmmss_DS`
 
----
-
-## ⏱ Adjustable Simulation Timer
+## Adjustable Simulation Timer
 
 Use the timer control to:
 - Slow down or speed up simulation
 - Pause between head movements for better observation
 
----
-
-## 🚀 How to Run in VS Code Terminal
+## How to Run in VS Code Terminal
 
 1. Compile:  javac -cp "lib/*" src/*.java 
 2. Run: java -cp "src:lib/*" DiskPlay
