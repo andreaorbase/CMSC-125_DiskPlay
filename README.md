@@ -12,24 +12,22 @@
 - [Contribution](#contribution)
   - [License](#license)
 
+## Overview
 **DiskPlay** is a desktop application for simulating various disk scheduling algorithms. It offers interactive input methods, animated visualizations, and exportable outputs for educational and analytical use.
 
----
+## Algorithms
+- FCFS (First-Come, First-Served)
+- SSTF (Shortest Seek Time First)
+- SCAN
+- C-SCAN
+- LOOK
+- C-LOOK
 
-## 🔧 Features
-
-- 🧩 **Three Input Options**:
+## Features
+- **Three Input Options**:
   - **Random Generation** – auto-generates queue length, cylinder positions, and head start.
   - **Manual Input** – enter request queue, head position, and direction via GUI.
   - **Text File Input** – load input from a structured `.txt` file.
-
-- 🧠 **Algorithms Supported**:
-  - FCFS (First-Come, First-Served)
-  - SSTF (Shortest Seek Time First)
-  - SCAN
-  - C-SCAN
-  - LOOK
-  - C-LOOK
 
 - 📊 **Simulation Visualization**:
   - Cylinders displayed as labeled dots (0–199)
