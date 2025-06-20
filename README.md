@@ -97,3 +97,8 @@ Use the timer control to:
 1. Compile:  javac -cp "lib/*" src/*.java 
 2. Run: java -cp "src:lib/*" DiskPlay
 
+## Contribution
+Developed by **Emiline Acompañado, Andrea Mae Orbase, Richard Biscante**
+as partial fulfillment of CMSC 125
+
+
