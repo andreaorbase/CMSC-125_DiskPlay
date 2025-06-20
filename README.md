@@ -103,4 +103,5 @@ as partial fulfillment of CMSC 125
 
 ### License
 This project is open-source and intended for academic and educational use.
+Feel free to reuse with attribution.
 
