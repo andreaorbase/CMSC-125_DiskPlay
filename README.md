@@ -101,4 +101,6 @@ Use the timer control to:
 Developed by **Emiline Acompañado, Andrea Mae Orbase, Richard Biscante**
 as partial fulfillment of CMSC 125
 
+### License
+This project is open-source and intended for academic and educational use.
 
